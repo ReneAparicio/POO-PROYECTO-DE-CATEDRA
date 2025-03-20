@@ -47,3 +47,21 @@ public class MultiWorksGroup extends JFrame {
             JOptionPane.showMessageDialog(this, "Error en Cliente");
         }
     }
+
+void addCot() {
+        try {
+            String titulo = get("Título Actividad:"), trabajador = get("Trabajador asignado:"), area = get("Área asignada:");
+            double costoHora = Double.parseDouble(get("Costo/hora:"));
+            String inicio = get("Fecha y hora de inicio:"), fin = get("Fecha y hora de fin:");
+            double horas = Double.parseDouble(get("Cantidad de horas aproximadas:"));
+            double incremento = Double.parseDouble(get("Incremento extra (%):"));
+            double total = (costoHora * horas) + ((costoHora * horas) * incremento / 100.0);
+            NumberFormat nf = NumberFormat.getCurrencyInstance();
+            mCot.addRow(new Object[]{titulo, trabajador, area, costoHora, inicio, fin, horas, incremento, nf.format(total)});
+        } catch (Exception ex) {
+            JOptionPane.showMessageDialog(this, "Error en Cotización");
+        }
+    }
+
+    String get(String p){ return JOptionPane.showInputDialog(this, p); }
+} 
