@@ -30,3 +30,20 @@ public class MultiWorksGroup extends JFrame {
 
         add(tabs, BorderLayout.CENTER);
     }
+    JPanel createPanel(DefaultTableModel m, String txt, java.awt.event.ActionListener al) {
+        JPanel p = new JPanel(new BorderLayout());
+        p.add(new JScrollPane(new JTable(m)), BorderLayout.CENTER);
+        JButton b = new JButton(txt);
+        b.addActionListener(al);
+        p.add(b, BorderLayout.SOUTH);
+        return p;
+    }
+
+    void addCli() {
+        try {
+            int id = Integer.parseInt(get("ID único del Cliente:"));
+            mCli.addRow(new Object[]{id, get("Nombre"), get("Documento"), get("Tipo de Persona"), get("Teléfono"), get("Correo"), get("Dirección"), get("Estado"), get("Creado Por"), get("Fecha de Creación"), get("Fecha de Actualización"), get("Fecha de Inactivación")});
+        } catch (Exception ex) {
+            JOptionPane.showMessageDialog(this, "Error en Cliente");
+        }
+    }
