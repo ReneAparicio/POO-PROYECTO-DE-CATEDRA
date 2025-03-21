@@ -47,6 +47,15 @@ public class MultiWorksGroup extends JFrame {
             JOptionPane.showMessageDialog(this, "Error en Cliente");
         }
     }
+//Rafel
+     void addEmp() {
+        try {
+            int id = Integer.parseInt(get("ID único del Empleado:"));
+            mEmp.addRow(new Object[]{id, get("Nombre"), get("Documento"), get("Tipo de Persona"), get("Tipo de Contratación"), get("Teléfono"), get("Correo"), get("Dirección"), get("Estado"), get("Creado Por"), get("Fecha de Creación"), get("Fecha de Actualización"), get("Fecha de Inactivación")});
+        } catch (Exception ex) {
+            JOptionPane.showMessageDialog(this, "Error en Empleado");
+        }
+    } 
 
 void addCot() {
         try {
