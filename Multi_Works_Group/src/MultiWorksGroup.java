@@ -8,12 +8,14 @@ public class MultiWorksGroup extends JFrame {
 
     public MultiWorksGroup() {
         super("Multi-Works Group");
+        // Inicializa la ventana principal y configuro sus propiedades básicas (tamaño, color, posición).
         setDefaultCloseOperation(EXIT_ON_CLOSE);
         setSize(700,500);
         setLocationRelativeTo(null);
         getContentPane().setBackground(new Color(0x90BCF5));
         setLayout(new BorderLayout());
         add(new JLabel("¡Bienvenido a Multi-Works Group!", SwingConstants.CENTER), BorderLayout.NORTH);
+        // Crea el JTabbedPane para organizar los diferentes módulos (Cliente, Empleado, Actividad, Cotización).
         JTabbedPane tabs = new JTabbedPane();
 
         mCli = new DefaultTableModel(new Object[]{"ID","Nombre","Documento","Tipo Persona","Teléfono","Correo","Dirección","Estado","Creado Por","Fecha Creación","Fecha Actualización","Fecha Inactivación"},0);
@@ -30,6 +32,7 @@ public class MultiWorksGroup extends JFrame {
 
         add(tabs, BorderLayout.CENTER);
     }
+    // Método que genera un panel con una tabla y un botón, facilitando la reutilización del código.
     JPanel createPanel(DefaultTableModel m, String txt, java.awt.event.ActionListener al) {
         JPanel p = new JPanel(new BorderLayout());
         p.add(new JScrollPane(new JTable(m)), BorderLayout.CENTER);
@@ -40,6 +43,7 @@ public class MultiWorksGroup extends JFrame {
     }
 
     void addCli() {
+        // Se captura y valida la información ingresada para agregar un nuevo cliente.
         try {
             int id = Integer.parseInt(get("ID único del Cliente:"));
             mCli.addRow(new Object[]{id, get("Nombre"), get("Documento"), get("Tipo de Persona"), get("Teléfono"), get("Correo"), get("Dirección"), get("Estado"), get("Creado Por"), get("Fecha de Creación"), get("Fecha de Actualización"), get("Fecha de Inactivación")});
@@ -81,6 +85,7 @@ void addCot() {
             JOptionPane.showMessageDialog(this, "Error en Cotización");
         }
     }
-
+    
+    // Función auxiliar que muestra un diálogo para que el usuario ingrese datos.
     String get(String p){ return JOptionPane.showInputDialog(this, p); }
 } 
