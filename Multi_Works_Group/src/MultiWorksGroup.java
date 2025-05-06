@@ -71,6 +71,16 @@ public class MultiWorksGroup extends JFrame {
         }
     }
 
+        void addAct() {
+        try {
+            int id = Integer.parseInt(get("ID de la asignación:"));
+            String titulo = get("Título de la subtarea:"), descripcion = get("Descripción de la subtarea:");
+            mAct.addRow(new Object[]{id, titulo, descripcion});
+        } catch (Exception ex) {
+            JOptionPane.showMessageDialog(this, "Error en Actividad");
+        }
+    }
+
 void addCot() {
         try {
             String titulo = get("Título Actividad:"), trabajador = get("Trabajador asignado:"), area = get("Área asignada:");
