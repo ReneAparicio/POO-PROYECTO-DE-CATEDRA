@@ -1,1 +1,0 @@
-<html><body><h2>Bienvenido, Empleado</h2><a href='logout'>Cerrar sesión</a></body></html>
