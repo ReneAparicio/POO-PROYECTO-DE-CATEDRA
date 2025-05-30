@@ -2,36 +2,64 @@ package com.example.multiworks;
 
 import jakarta.servlet.*;
 import jakarta.servlet.http.*;
+import jakarta.servlet.annotation.*;
+
 import java.io.IOException;
 import java.sql.*;
+import org.mindrot.jbcrypt.BCrypt;
 
+@WebServlet("/login")
 public class LoginServlet extends HttpServlet {
-    protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        String nombre = request.getParameter("nombre");
-        String contrasena = request.getParameter("contrasena");
+
+    protected void doPost(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
+
+        String nombreUsuario = request.getParameter("nombre");
+        String contrasenaPlana = request.getParameter("contrasena");
 
         try (Connection conn = DBConnection.getConnection()) {
-            PreparedStatement stmt = conn.prepareStatement("SELECT rol FROM usuarios WHERE nombre = ? AND contrasena = ?");
-            stmt.setString(1, nombre);
-            stmt.setString(2, contrasena);
+            PreparedStatement stmt = conn.prepareStatement(
+                    "SELECT id_usuario, contrasena_hash, rol FROM usuarios WHERE nombre_usuario = ?"
+            );
+            stmt.setString(1, nombreUsuario);
             ResultSet rs = stmt.executeQuery();
 
             if (rs.next()) {
-                String rol = rs.getString("rol");
-                HttpSession session = request.getSession();
-                session.setAttribute("rol", rol);
+                String contrasenaHash = rs.getString("contrasena_hash");
 
-                if ("empleado".equals(rol)) {
-                    response.sendRedirect("empleado.jsp");
+                // Verificar contraseña con hash
+                if (BCrypt.checkpw(contrasenaPlana, contrasenaHash)) {
+                    int idUsuario = rs.getInt("id_usuario");
+                    String rol = rs.getString("rol");
+
+                    HttpSession session = request.getSession();
+                    session.setAttribute("idUsuario", idUsuario); // <- CORREGIDO
+                    session.setAttribute("usuario", nombreUsuario);
+                    session.setAttribute("rol", rol);
+
+                    // Redirigir según rol
+                    if ("empleado".equals(rol)) {
+                        response.sendRedirect("empleado.jsp");
+                    } else if ("admin".equals(rol)) {
+                        response.sendRedirect("admin.jsp");
+                    } else {
+                        response.sendRedirect("usuario.jsp");
+                    }
                 } else {
-                    response.sendRedirect("usuario.jsp");
+                    manejarError(request, response, "Contraseña incorrecta");
                 }
             } else {
-                request.setAttribute("errorMessage", "Usuario o contraseña incorrectos.");
-                request.getRequestDispatcher("login.jsp").forward(request, response);
+                manejarError(request, response, "Usuario no encontrado");
             }
+
         } catch (SQLException e) {
-            throw new ServletException(e);
+            throw new ServletException("Error en base de datos: " + e.getMessage(), e);
         }
+    }
+
+    private void manejarError(HttpServletRequest request, HttpServletResponse response, String mensaje)
+            throws ServletException, IOException {
+        request.setAttribute("errorMessage", mensaje);
+        request.getRequestDispatcher("login.jsp").forward(request, response);
     }
 }
